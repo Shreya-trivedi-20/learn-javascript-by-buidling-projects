@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guessing Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        #wordDisplay {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 8px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word Guessing Game</h1>
+    <p>Guess the word:</p>
+    <p id="wordDisplay"></p>
+    <p>Incorrect guesses: <span id="incorrectGuesses">0</span></p>
+    <p>Attempts left: <span id="attemptsLeft">6</span></p>
+    <input type="text" id="userGuess" placeholder="Enter a letter">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p id="result"></p>
+
+    <script>
+       // Array of words for the game
+        const words = ['javascript', 'programming', 'developer', 'array', 'coding'];
+
+        // Select a random word from the array
+        let selectedWord = words[Math.floor(Math.random() * words.length)];
+
+        // Arrays to store correct and incorrect guesses
+        let correctGuesses = Array(selectedWord.length).fill('_');
+        let incorrectGuesses = [];
+
+        // Function to display the current state of the word
+        function displayWord() {
+            document.getElementById('wordDisplay').textContent = correctGuesses.join(' ');
+        }
+
+        // Function to check the user's guess
+        function checkGuess() {
+            const userGuess = document.getElementById('userGuess').value.toLowerCase();
+
+            // Check if the letter has already been guessed
+            if (correctGuesses.includes(userGuess) || incorrectGuesses.includes(userGuess)) {
+                document.getElementById('result').textContent = 'You already guessed that letter. Try again!';
+                return;
+            }
+
+            // Check if the letter is in the word
+            if (selectedWord.includes(userGuess)) {
+                // Update correctGuesses array
+                for (let i = 0; i < selectedWord.length; i++) {
+                    if (selectedWord[i] === userGuess) {
+                        correctGuesses[i] = userGuess;
+                    }
+                }
+
+                // Display the updated word
+                displayWord();
+
+                // Check if the player has guessed the entire word
+                if (!correctGuesses.includes('_')) {
+                    document.getElementById('result').textContent = 'Congratulations! You guessed the word!';
+                }
+            } else {
+                // Update incorrectGuesses array
+                incorrectGuesses.push(userGuess);
+                document.getElementById('incorrectGuesses').textContent = incorrectGuesses.join(', ');
+
+                // Decrease attempts left
+                let attemptsLeft = parseInt(document.getElementById('attemptsLeft').textContent);
+                attemptsLeft--;
+
+                // Check if the player has run out of attempts
+                if (attemptsLeft === 0) {
+                    document.getElementById('result').textContent = 'Sorry, you ran out of attempts. The correct word was: ' + selectedWord;
+                } else {
+                    document.getElementById('result').textContent = 'Incorrect guess. Try again!';
+                    document.getElementById('attemptsLeft').textContent = attemptsLeft;
+                }
+            }
+
+            // Clear the input field for the next guess
+            document.getElementById('userGuess').value = '';
+        }
+
+        // Initialize the game by displaying the initial state of the word
+        displayWord();
+    </script>
+</body>
+</html>
