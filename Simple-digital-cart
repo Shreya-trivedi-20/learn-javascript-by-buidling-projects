@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        /* Styles for the shopping cart items */
+        .item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        /* Styles for the shopping cart total */
+        #total {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    
+    <!-- Container to display items -->
+    <div id="items-container">
+        <!-- Items will be dynamically added here -->
+    </div>
+
+    <!-- Display total cost -->
+    <div id="total"></div>
+
+    <script>
+        // Sample products
+        const products = [
+            { id: 1, name: "Product 1", price: 10 },
+            { id: 2, name: "Product 2", price: 20 },
+            { id: 3, name: "Product 3", price: 30 }
+        ];
+
+        // Initialize empty cart
+        let cart = [];
+
+        // Function to display items in the cart
+        function displayCart() {
+            const itemsContainer = document.getElementById('items-container');
+            itemsContainer.innerHTML = ''; // Clear existing items
+
+            // Loop through each item in the cart
+            cart.forEach(item => {
+                // Create HTML for each item
+                const itemHTML = `
+                    <div class="item">
+                        <span>${item.name}</span>
+                        <span>${item.price}</span>
+                    </div>
+                `;
+                // Append item HTML to container
+                itemsContainer.innerHTML += itemHTML;
+            });
+
+            // Update total cost
+            const totalElement = document.getElementById('total');
+            const totalCost = cart.reduce((acc, item) => acc + item.price, 0);
+            totalElement.textContent = `Total: $${totalCost}`;
+        }
+
+        // Function to add item to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                displayCart();
+            } else {
+                console.error("Product not found");
+            }
+        }
+
+        // Add event listeners to buttons for adding products to cart
+        document.addEventListener('DOMContentLoaded', () => {
+            products.forEach(product => {
+                const button = document.createElement('button');
+                button.textContent = `Add ${product.name} to Cart`;
+                button.addEventListener('click', () => addToCart(product.id));
+                document.body.appendChild(button);
+            });
+        });
+    </script>
+</body>
+</html>
